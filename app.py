@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import os
@@ -15,6 +16,14 @@ from src.prediction import predict
 
 # Initialize FastAPI
 app = FastAPI(title="Language Detection API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins for now, adjust later
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Load pre-trained artifacts
 model_path = "models/language_detection_model.keras"
