@@ -110,40 +110,58 @@ These visualizations tell a story about:
    ```bash
    git clone <repo-url>
    cd LingoPredict
-Install Flutter dependencies:
+   
+2. Install Flutter dependencies:
 flutter pub get
-Install Python dependencies:
-bash
-Copy code
+
+3. Install Python dependencies:
 pip install -r requirements.txt
 Run the backend server:
-bash
-Copy code
 uvicorn main:app --reload
-Launch the Flutter app:
-bash
-Copy code
+
+4. Launch the Flutter app:
 flutter run
+
 API Documentation
+
 Prediction Endpoint
+
 URL: /predict
+
 Method: POST
+
 Input: {"sentences": ["text"]}
+
 Output: Predicted language and confidence score.
+
 Retrain Endpoint
+
 URL: /retrain
+
 Method: POST
+
 Input: .csv file.
+
 Output: Model metrics and a download URL.
+
 Model Download Endpoint
+
 URL: /download-retrained-model
+
 Method: GET
+
 Output: Downloads the retrained model file.
+
 Future Enhancements
+
 Integrate advanced visualizations using Flutter.
+
 Support for multiple datasets.
+
 Real-time language translation features.
+
 Web-based version of the app.
+
 License
 This project is licensed under Mariam Temilola Azeez
 
