@@ -12,18 +12,18 @@ def build_simple_model(input_dim, output_dim):
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
-def build_optimized_model(input_dim, output_dim):
-    def lr_scheduler(epoch, lr):
-        return lr * 0.9 if epoch >= 5 else lr
+# def build_optimized_model(input_dim, output_dim):
+#     def lr_scheduler(epoch, lr):
+#         return lr * 0.9 if epoch >= 5 else lr
 
-    model = Sequential([
-        Dense(128, input_dim=input_dim, activation='relu', kernel_regularizer=l2(0.001)),
-        BatchNormalization(),
-        Dropout(0.5),
-        Dense(output_dim, activation='softmax')
-    ])
-    model.compile(optimizer=Adam(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
-    return model, LearningRateScheduler(lr_scheduler)
+#     model = Sequential([
+#         Dense(128, input_dim=input_dim, activation='relu', kernel_regularizer=l2(0.001)),
+#         BatchNormalization(),
+#         Dropout(0.5),
+#         Dense(output_dim, activation='softmax')
+#     ])
+#     model.compile(optimizer=Adam(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
+#     return model, LearningRateScheduler(lr_scheduler)
 
 def train_model(model, X_train, y_train, X_val, y_val, callbacks=None, epochs=10, batch_size=32):
     history = model.fit(
