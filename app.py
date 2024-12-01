@@ -17,7 +17,7 @@ from src.prediction import predict
 app = FastAPI(title="Language Detection API")
 
 # Load pre-trained artifacts
-model_path = "models/language_detection_model_.keras"
+model_path = "models/language_detection_model.keras"
 vectorizer_path = "models/vectorizer.pkl"
 label_encoder_path = "models/label_encoder.pkl"
 
