@@ -11,6 +11,7 @@ from keras.utils import to_categorical
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from src.model import build_simple_model, train_model, save_model
 from src.prediction import predict
 
@@ -30,17 +31,16 @@ model_path = "models/language_detection_model.keras"
 vectorizer_path = "models/vectorizer.pkl"
 label_encoder_path = "models/label_encoder.pkl"
 
-# Load the model
+# Load the model and preprocessing artifacts
 model = load_model(model_path)
 
-# Load vectorizer and label encoder
 with open(vectorizer_path, 'rb') as vec_file:
     vectorizer = pickle.load(vec_file)
 
 with open(label_encoder_path, 'rb') as le_file:
     label_encoder = pickle.load(le_file)
 
-# Input data model
+# Input data model for prediction request
 class PredictionRequest(BaseModel):
     sentences: list[str]
 
@@ -58,6 +58,7 @@ async def make_prediction(request: PredictionRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Endpoint to retrain the model
 @app.post("/retrain")
 async def retrain_model(file: UploadFile = File(...)):
     # Check if the uploaded file is a CSV
@@ -94,22 +95,45 @@ async def retrain_model(file: UploadFile = File(...)):
         new_model = build_simple_model(input_dim, output_dim)
         train_model(new_model, X_train, y_train, X_val, y_val, epochs=10)
         
-        # Save the retrained model and preprocessors
+        # Calculate evaluation metrics
+        y_val_pred = new_model.predict(X_val)
+        y_val_pred_classes = y_val_pred.argmax(axis=1)
+        y_val_true_classes = y_val.argmax(axis=1)
+
+        accuracy = accuracy_score(y_val_true_classes, y_val_pred_classes)
+        precision = precision_score(y_val_true_classes, y_val_pred_classes, average="weighted")
+        recall = recall_score(y_val_true_classes, y_val_pred_classes, average="weighted")
+        f1 = f1_score(y_val_true_classes, y_val_pred_classes, average="weighted")
+
+        # Log metrics
+        print(f"Metrics - Accuracy: {accuracy}, Precision: {precision}, Recall: {recall}, F1-Score: {f1}")
+
+        # Save the retrained model and preprocessing artifacts
         save_model(new_model, model_path)
         with open(vectorizer_path, 'wb') as vec_file:
             pickle.dump(vectorizer, vec_file)
         with open(label_encoder_path, 'wb') as le_file:
             pickle.dump(label_encoder, le_file)
         
+        # Reload the model after retraining
+        model = load_model(model_path)
+
         return {
             "detail": "Model retrained successfully!",
-            "download_instruction": "You can download the retrained model by visiting the '/download-retrained-model' endpoint."
+            "metrics": {
+                "accuracy": accuracy,
+                "precision": precision,
+                "recall": recall,
+                "f1_score": f1
+            },
+            "model_download_url": "/download-retrained-model"
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         os.remove(temp_file_path)
 
+# Endpoint to download retrained model
 @app.get("/download-retrained-model")
 async def download_retrained_model():
     return FileResponse(model_path, filename="retrained_model.keras")

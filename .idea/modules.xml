@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Language_dectection_summative.iml" filepath="$PROJECT_DIR$/Language_dectection_summative.iml" />
+      <module fileurl="file://$PROJECT_DIR$/language_detection_app/android/app/src/debug/debug.iml" filepath="$PROJECT_DIR$/language_detection_app/android/app/src/debug/debug.iml" />
+      <module fileurl="file://$PROJECT_DIR$/language_detection_app/language_detection_app.iml" filepath="$PROJECT_DIR$/language_detection_app/language_detection_app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/language_detection_app/android/language_detection_app_android.iml" filepath="$PROJECT_DIR$/language_detection_app/android/language_detection_app_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/language_detection_app/android/app/src/profile/profile.iml" filepath="$PROJECT_DIR$/language_detection_app/android/app/src/profile/profile.iml" />
+    </modules>
+  </component>
+</project>
