@@ -9,6 +9,10 @@
 
 ### YouTube Link to Demo - https://youtu.be/tY_-tLf3CTo
 
+### APK File
+
+You can access the apk file at [language_detection_app](language_detection_app.apk)
+
 ### API Documentation
 
 ### Prediction Endpoint

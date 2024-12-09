@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'dart:html' as html;
 
 class ApiService {
   final String baseUrl;
@@ -50,25 +49,15 @@ class ApiService {
       final response = await http.get(Uri.parse(downloadUrl));
 
       if (response.statusCode == 200) {
-        // Create a Blob from the response body
-        final blob = html.Blob([response.bodyBytes]);
+        // Get the directory to save the file
+        final directory = await getApplicationDocumentsDirectory();
+        final filePath = '${directory.path}/retrained_model.keras';
 
-        // Create a URL for the Blob
-        final url = html.Url.createObjectUrlFromBlob(blob);
+        // Write the file
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
 
-        // Create an anchor element and trigger a download
-        final anchor = html.AnchorElement(href: url)
-          ..target = 'blank'
-          ..download =
-              'retrained_model.keras'; // Specify the name of the file to download
-
-        // Trigger the download by clicking the anchor element
-        anchor.click();
-
-        // Clean up the URL after the download
-        html.Url.revokeObjectUrl(url);
-
-        print('Model download started');
+        print('Model downloaded to $filePath');
       } else {
         throw Exception(
             'Failed to download model. Status code: ${response.statusCode}');
